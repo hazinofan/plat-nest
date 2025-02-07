@@ -24,7 +24,7 @@ export class AppController {
       storage: diskStorage({
         destination: 'public/files',
         filename: (req, file, cb) => {
-          cb(null, file.originalname); // Save the file with its original name
+          cb(null, file.originalname);
         },
       }),
     }),

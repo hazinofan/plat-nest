@@ -21,5 +21,9 @@ export class Product {
   price_before: number;
 
   @Column('simple-array')  
-  features: string[];
+  features: string;
+
+  @Column()
+  photos: string; 
 }
+ 

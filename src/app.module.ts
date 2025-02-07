@@ -4,6 +4,10 @@ import { ConfigModule } from '@nestjs/config';
 import { ProductsModule } from './products/products.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './auth/users.module';
+import { AppController } from './app.controller'; 
+import { AppService } from './app.service'; 
+import { BlogsModule } from './blogs/blogs.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -15,11 +19,14 @@ import { UsersModule } from './auth/users.module';
       password: "password",
       database: "platinium",
       autoLoadEntities: true,
-      synchronize: true,
+      synchronize: true, 
     }),
     ProductsModule,
     AuthModule,
     UsersModule,
+    BlogsModule,
   ],
-}) 
+  controllers: [AppController],
+  providers: [AppService], 
+})
 export class AppModule {}
