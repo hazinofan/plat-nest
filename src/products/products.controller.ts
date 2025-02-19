@@ -5,7 +5,7 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('products')
 export class ProductsController {
-  constructor(private readonly productsService: ProductsService) {}
+  constructor(private readonly productsService: ProductsService) { }
 
   // Get a product by ID
   @Get(':id')
@@ -20,10 +20,10 @@ export class ProductsController {
     return this.productsService.create(productData);
   }
 
-  //Get All Products
+  // Get All Products
   @Get()
   async getAllProducts(): Promise<Product[]> {
-    return await this.productsService.findAll()
+    return await this.productsService.findAll();
   }
 
   // Update a product by ID
@@ -39,5 +39,14 @@ export class ProductsController {
   async deleteProduct(@Param('id') id: number): Promise<{ message: string }> {
     await this.productsService.remove(id);
     return { message: `Product with ID ${id} deleted successfully.` };
+  }
+
+  // ✅ Use `slug` instead of `name` for better SEO
+  @Get('slug/:slug')
+  async getProductBySlug(@Param('slug') slug: string) {
+    const decodedSlug = decodeURIComponent(slug).trim(); // Decode and clean slug
+    console.log("Decoded Slug:", `"${decodedSlug}"`); // Debug log
+  
+    return this.productsService.findBySlug(decodedSlug);
   }
 }
