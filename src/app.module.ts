@@ -7,10 +7,11 @@ import { UsersModule } from './auth/users.module';
 import { AppController } from './app.controller'; 
 import { AppService } from './app.service'; 
 import { BlogsModule } from './blogs/blogs.module';
+import { MailerModule } from './mailer/mailer.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: "127.0.0.1",
@@ -25,6 +26,7 @@ import { BlogsModule } from './blogs/blogs.module';
     AuthModule,
     UsersModule,
     BlogsModule,
+    MailerModule,
   ],
   controllers: [AppController],
   providers: [AppService], 

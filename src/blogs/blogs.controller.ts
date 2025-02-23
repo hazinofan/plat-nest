@@ -1,5 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, Put, UploadedFile, UseInterceptors, UseGuards, Patch, Query } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { Controller, Get, Post, Body, Param, Delete, Put, UseGuards, Patch, Query } from '@nestjs/common';
 import { BlogService } from './blogs.service';
 import { CreateBlogDto } from './dto/create-blog.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
@@ -13,21 +12,22 @@ export class BlogController {
     getAllBlogs(@Query('skip') skip: number, @Query('take') take: number) {
         return this.blogService.findAll(skip, take);
     }
-
-
+ 
     @Get(':id')
     getBlogById(@Param('id') id: number) {
         return this.blogService.findOne(id);
     }
+ 
+    @Get('slug/:slug')  
+    getBlogBySlug(@Param('slug') slug: string) {
+        return this.blogService.findBySlug(slug);
+    } 
 
     @Post()
     @UseGuards(JwtAuthGuard)
-    async createBlog(
-        @Body() blogData: CreateBlogDto,
-    ): Promise<Blog> {
+    async createBlog(@Body() blogData: CreateBlogDto): Promise<Blog> {
         return this.blogService.create(blogData);
     }
-
 
     @Patch(':id')
     updateBlog(@Param('id') id: number, @Body() body) {

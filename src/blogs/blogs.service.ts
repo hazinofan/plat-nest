@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Blog } from './entities/blog.entity';
+import { slugify } from './utils/slugify';
 
 @Injectable()
 export class BlogService {
@@ -11,20 +12,28 @@ export class BlogService {
         return this.blogRepo.find({
             skip,
             take,
-            order: { createdAt: 'DESC' }, 
+            order: { createdAt: 'DESC' },
         });
-    }    
+    }
 
     findOne(id: number) {
         return this.blogRepo.findOne({ where: { id } });
     }
 
-  async create(blogData: Partial<Blog>): Promise<Blog> {
-    const product = this.blogRepo.create(blogData);
-    return await this.blogRepo.save(product);
-  }
+    findBySlug(slug: string) {  // ✅ Find blog by slug
+        return this.blogRepo.findOne({ where: { slug } });
+    }
+
+    async create(blogData: Partial<Blog>): Promise<Blog> {
+        blogData.slug = slugify(blogData.title); // ✅ Generate slug from title
+        const blog = this.blogRepo.create(blogData);
+        return await this.blogRepo.save(blog);
+    }
 
     async update(id: number, body) {
+        if (body.title) {
+            body.slug = slugify(body.title); 
+        }
         await this.blogRepo.update(id, body);
         return this.findOne(id);
     }
