@@ -8,6 +8,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service'; 
 import { BlogsModule } from './blogs/blogs.module';
 import { MailerModule } from './mailer/mailer.module';
+import { PlatUsersModule } from './plat_users/plat_users.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { MailerModule } from './mailer/mailer.module';
     UsersModule,
     BlogsModule,
     MailerModule,
+    PlatUsersModule,
   ],
   controllers: [AppController],
   providers: [AppService], 
