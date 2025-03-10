@@ -15,7 +15,6 @@ export class ProductsController {
 
   // Create a new product
   @Post()
-  @UseGuards(JwtAuthGuard)
   async createProduct(@Body() productData: Partial<Product>): Promise<Product> {
     return this.productsService.create(productData);
   }
@@ -28,7 +27,6 @@ export class ProductsController {
 
   // Update a product by ID
   @Patch(':id')
-  @UseGuards(JwtAuthGuard)
   async updateProduct(@Param('id') id: number, @Body() updateData: Partial<Product>): Promise<Product> {
     return this.productsService.update(id, updateData);
   }

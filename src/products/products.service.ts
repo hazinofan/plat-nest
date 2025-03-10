@@ -21,6 +21,8 @@ export class ProductsService {
   async findAll(): Promise<Product[]> {
     return await this.productRepository.find();
   }
+
+  //add product
   async create(productData: Partial<Product>): Promise<Product> {
     const product = this.productRepository.create(productData);
     product.slug = this.generateSlug(product.name);

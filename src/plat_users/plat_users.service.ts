@@ -68,7 +68,9 @@ export class PlatUsersService {
         return await this.usersRepository.find({
             relations: {
                 coupons: true,
-                orders: true,
+                orders: {
+                    user: true
+                },
                 ticket: true
             }
         })
@@ -122,6 +124,15 @@ export class PlatUsersService {
         return { order, coupon, user };
     }
 
+    async findAllOrders(): Promise<Orders[]> {
+        const orders = await this.ordersRepository.find({ relations: ["user"] });
+        return orders;
+    }
+
+    // ✅ Find an order by ID
+    async findOrderById(id: number): Promise<Orders | null> {
+        return await this.ordersRepository.findOne({ where: { id }, relations: ["user"] });
+    }
 
 
     // 🔹 **Generate a Random Coupon Code**
@@ -138,6 +149,12 @@ export class PlatUsersService {
 
         const ticket = this.ticketsRepository.create({ user, subject, message });
         return await this.ticketsRepository.save(ticket);
+    }
+
+    //Get All tickets 
+    async getTickets(): Promise<Tickets[]> {
+        const tickets = this.ticketsRepository.find({ relations: ["users"] })
+        return tickets
     }
 
     // 🔹 **Remove a Ticket**
@@ -209,6 +226,51 @@ export class PlatUsersService {
 
         await this.usersRepository.save(user);
         return { message: "User information updated successfully.", user };
+    }
+
+    async updateOrder(id: number, updateData: Partial<Orders>) {
+        const order = await this.ordersRepository.findOne({ where: { id } });
+        Object.assign(order, updateData)
+
+        await this.ordersRepository.update(id, updateData);
+        return { message: 'Order Updated Sucessfully', order }
+    }
+
+    // delete order
+    async deleteOrder(id: number) {
+        const order = await this.ordersRepository.findOne({ where: { id } })
+        await this.ordersRepository.delete(id)
+        return { message: 'Order Deleted Sucessfully', order }
+    }
+
+    async deleteUser(id: number) {
+        const user = await this.usersRepository.findOne({ where: { id } })
+        await this.usersRepository.delete(id)
+        return { message: 'User Deleted Sucessfully', user }
+    }
+
+    //get ticket by id
+    async getTicketById(ticketId: number) {
+        const ticket = await this.ticketsRepository.findOne({ where: { id : ticketId }, relations: ["user"] });
+
+        if (!ticket) {
+            throw new NotFoundException(`Ticket with ID ${ticketId} not found`);
+        }
+
+        return ticket;
+    }
+
+    async updateTicket(ticketId: number, updateData: Partial<{ subject: string; message: string; status: string }>) {
+        const ticket = await this.ticketsRepository.findOne({ where: { id: ticketId } });
+
+        if (!ticket) {
+            throw new NotFoundException(`Ticket with ID ${ticketId} not found`);
+        }
+
+        Object.assign(ticket, updateData); // ✅ Merge new data into the ticket
+        await this.ticketsRepository.save(ticket); // ✅ Save the updated ticket
+
+        return { message: "Ticket updated successfully", ticket };
     }
 
 
