@@ -12,7 +12,7 @@ export class BlogService {
         return this.blogRepo.find({
             skip,
             take,
-            order: { createdAt: 'DESC' },
+            order: { created_at: 'DESC' },
         });
     }
 

@@ -1,4 +1,4 @@
-import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import * as bcrypt from 'bcrypt';
 import { Orders } from "./order.entity";
 import { Coupons } from "./coupons.entity";
@@ -30,11 +30,12 @@ export class PlatUsers {
     @Column({ nullable: true, default: '/assets/avatar.jpg' })
     avatar: string;
 
-    @CreateDateColumn()
+    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     created_at: Date;
+    
+    @Column({ type: 'datetime', nullable: true })
+    updated_at: Date;    
 
-    @UpdateDateColumn()
-    updated_at: Date;
 
     // One user can have multiple orders
     @OneToMany(() => Orders, (order) => order.user, {

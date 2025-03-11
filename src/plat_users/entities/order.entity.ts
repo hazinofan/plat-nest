@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, CreateDateColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { PlatUsers } from "./plat_user.entity";
 
 @Entity()
@@ -9,13 +9,17 @@ export class Orders {
     @Column()
     total_price: number;
 
-    @Column({type: 'json'})
+    @Column({ type: 'text', transformer: {
+        to: (value: string[]) => JSON.stringify(value), 
+        from: (value: string) => JSON.parse(value) 
+    }})
     products: string[];
+    
 
-    @Column({default: false})
-    status: boolean;  
+    @Column({ default: false })
+    status: boolean;
 
-    @CreateDateColumn()
+    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     created_at: Date;
 
     // Each order belongs to a single user

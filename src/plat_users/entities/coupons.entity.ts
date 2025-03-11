@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, CreateDateColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { PlatUsers } from "./plat_user.entity";
 
 @Entity()
@@ -18,8 +18,8 @@ export class Coupons {
     @Column({ default: "active" })
     status: "active" | "used" | "expired";
 
-    @CreateDateColumn()
-    created_at: Date;
+    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+created_at: Date;
 
     // Each coupon belongs to a single user
     @ManyToOne(() => PlatUsers, (user) => user.coupons, { onDelete: "CASCADE" })

@@ -102,9 +102,10 @@ export class PlatUsersService {
             user,
             total_price,
             status: false,
-            products,
+            products, 
         });
         await this.ordersRepository.save(order);
+        
 
         const coupon = this.couponsRepository.create({
             user,
@@ -251,7 +252,7 @@ export class PlatUsersService {
 
     //get ticket by id
     async getTicketById(ticketId: number) {
-        const ticket = await this.ticketsRepository.findOne({ where: { id : ticketId }, relations: ["user"] });
+        const ticket = await this.ticketsRepository.findOne({ where: { id: ticketId }, relations: ["user"] });
 
         if (!ticket) {
             throw new NotFoundException(`Ticket with ID ${ticketId} not found`);

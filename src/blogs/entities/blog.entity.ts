@@ -1,5 +1,5 @@
 import { slugify } from 'transliteration';
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, BeforeInsert } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert } from 'typeorm';
 
 @Entity()
 export class Blog {
@@ -18,8 +18,8 @@ export class Blog {
     @Column({ unique: true })
     slug: string;  // ✅ Add this field for SEO-friendly URLs
 
-    @CreateDateColumn()
-    createdAt: Date; 
+    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    created_at: Date;   
 
     @BeforeInsert()
     generateSlug() {
