@@ -1,10 +1,10 @@
-import { Controller, Get, Param, Post, Req, Res, UploadedFile, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Param, Post, Req, Res, UploadedFile, UploadedFiles, UseInterceptors, HttpException, HttpStatus } from '@nestjs/common';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { join } from 'path';
-import { createReadStream } from 'fs';
+import { createReadStream, existsSync } from 'fs';
 import { Public } from './is-public.decorator';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 
 @Controller()
 export class AppController {
@@ -12,8 +12,16 @@ export class AppController {
 
   @Get('public/files/:filename')
   @Public()
-  getFile(@Param('filename') filename: string, @Res() res) {
-    const file = createReadStream(join(process.cwd(), 'public/files', filename));
+  getFile(@Param('filename') filename: string, @Res() res: Response) {
+    const filePath = join(process.cwd(), 'public/files', filename);
+
+    // ✅ Check if file exists before attempting to read it
+    if (!existsSync(filePath)) {
+      console.error(`❌ File not found: ${filePath}`);
+      throw new HttpException('File not found', HttpStatus.NOT_FOUND);
+    }
+
+    const file = createReadStream(filePath);
     file.pipe(res);
   }
 
