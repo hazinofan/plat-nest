@@ -23,6 +23,11 @@ import { PlatUsersModule } from './plat_users/plat_users.module';
       autoLoadEntities: true,
       synchronize: true,
       extra: { supportBigNumbers: true, dateStrings: true },
+      logging: false,
+      extra: {
+        keepAlive: true,
+        connectionLimit: 10, 
+      },
     }),
     ProductsModule,
     AuthModule,
